@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download von YouTube/TikTok</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input, select, button {
+      margin: 10px;
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+    }
+    #yt-options, #tik-options {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Download von YouTube oder TikTok</h1>
+
+  <label for="platform">Wählen Sie eine Plattform:</label><br>
+  <select id="platform" onchange="showOptions()">
+    <option value="none">Bitte wählen</option>
+    <option value="youtube">YouTube</option>
+    <option value="tiktok">TikTok</option>
+  </select>
+
+  <!-- YouTube Auswahl -->
+  <div id="yt-options">
+    <h2>YouTube Optionen</h2>
+    <select id="yt-option">
+      <option value="thumbnail">Thumbnail herunterladen</option>
+      <option value="audio">Audio herunterladen (MP3)</option>
+    </select><br><br>
+    <input id="yt-url" type="text" placeholder="YouTube URL"><br><br>
+    <button onclick="downloadYouTube()">Download</button>
+    <div id="yt-result"></div>
+  </div>
+
+  <!-- TikTok Auswahl -->
+  <div id="tik-options">
+    <h2>TikTok Video herunterladen</h2>
+    <input id="tik-url" type="text" placeholder="TikTok URL"><br><br>
+    <button onclick="downloadTikTok()">Download</button>
+    <div id="tik-result"></div>
+  </div>
+
+  <script>
+    function showOptions() {
+      const platform = document.getElementById("platform").value;
+      document.getElementById("yt-options").style.display = (platform === "youtube") ? "block" : "none";
+      document.getElementById("tik-options").style.display = (platform === "tiktok") ? "block" : "none";
+    }
+
+    // YouTube Thumbnail oder Audio herunterladen
+    function downloadYouTube() {
+      const url = document.getElementById("yt-url").value;
+      const option = document.getElementById("yt-option").value;
+
+      if (!url) {
+        alert("Bitte geben Sie eine URL ein");
+        return;
+      }
+
+      if (option === "thumbnail") {
+        const videoId = url.split("v=")[1]?.split("&")[0];
+        const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        document.getElementById("yt-result").innerHTML = `
+          <img src="${thumbUrl}" width="480"><br><br>
+          <a href="${thumbUrl}" download="thumbnail.jpg">
+            <button>Thumbnail herunterladen</button>
+          </a>
+        `;
+      } else if (option === "audio") {
+        const videoId = url.split("v=")[1]?.split("&")[0];
+        const audioUrl = `https://yt-download.org/api/button/mp3/${videoId}`;
+        document.getElementById("yt-result").innerHTML = `
+          <a href="${audioUrl}" download="audio.mp3">
+            <button>Audio herunterladen</button>
+          </a>
+        `;
+      }
+    }
+
+    // TikTok Video herunterladen
+    function downloadTikTok() {
+      const url = document.getElementById("tik-url").value;
+
+      if (!url) {
+        alert("Bitte geben Sie eine TikTok URL ein");
+        return;
+      }
+
+      const videoUrl = `https://snaptik.app/api/download?url=${url}`;
+      document.getElementById("tik-result").innerHTML = `
+        <a href="${videoUrl}" download="tiktok-video.mp4">
+          <button>Video herunterladen</button>
+        </a>
+      `;
+    }
+  </script>
+
+</body>
+</html>
